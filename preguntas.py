@@ -12,6 +12,9 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 """
 
+datos=open("data.csv","r").readlines()
+datos=[i.replace("\n","") for i in datos]
+
 
 def pregunta_01():
     """
@@ -21,8 +24,12 @@ def pregunta_01():
     214
 
     """
-    return
+    columna2=[i[2] for i in datos]
+    suma=sum([int(numero)for numero in columna2])
+    return suma
 
+#
+print(pregunta_01())
 
 def pregunta_02():
     """
