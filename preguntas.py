@@ -12,6 +12,14 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 """
 
+from itertools import count
+from operator import itemgetter
+
+
+datos = open("data.csv","r").readlines()
+datos = [z.replace("\n","") for z in datos]
+
+
 
 def pregunta_01():
     """
@@ -21,7 +29,10 @@ def pregunta_01():
     214
 
     """
-    return
+    col2=[z[2] for z in datos]
+    suma = sum([int(numero) for numero in col2])
+
+    return suma
 
 
 def pregunta_02():
@@ -39,7 +50,14 @@ def pregunta_02():
     ]
 
     """
-    return
+    col1=[z[0] for z in datos]
+    col1.sort()
+    l=[(x ,col1.count(x)) for x in col1]
+    diccionario = {key:valor for key, valor in l}
+    lista = []
+    [lista.append(item) for item in diccionario.items()]
+    return lista
+
 
 
 def pregunta_03():
@@ -57,7 +75,17 @@ def pregunta_03():
     ]
 
     """
-    return
+    col1=[z[0] for z in datos]
+    col2=[int(z[2]) for z in datos]
+    zipped=list(zip(col1, col2))
+    f=itemgetter(0)
+    zipped = sorted(zipped,key=f)
+    contador={}
+    for key,value in zipped:
+        contador[key]= contador.get(key,0)+value
+    return [(key,contador[key]) for key in contador]
+
+
 
 
 def pregunta_04():
@@ -82,8 +110,14 @@ def pregunta_04():
     ]
 
     """
-    return
-
+    col3=[z[9:11] for z in datos]
+    col3.sort()
+    l=[(x ,col3.count(x)) for x in col3]
+    diccionario = {key:valor for key, valor in l}
+    lista = []
+    [lista.append(item) for item in diccionario.items()]
+    return lista
+ 
 
 def pregunta_05():
     """
@@ -100,7 +134,34 @@ def pregunta_05():
     ]
 
     """
-    return
+    col1=[z[0] for z in datos]
+    col2=[int(z[2]) for z in datos]
+    zipped=list(zip(col1, col2))
+    f=itemgetter(0)
+    zipped = sorted(zipped,key=f)
+    d_mayor={}
+    d_menor= {}
+    for i in zipped:
+        if i[0] in d_mayor:
+            if d_mayor[i[0]]<i[1]:
+                d_mayor[i[0]]=i[1]
+        else:
+            d_mayor[i[0]]=i[1]
+    for i in zipped:
+        if i[0] in d_menor:
+            if d_menor[i[0]]>i[1]:
+                d_menor[i[0]]=i[1]
+        else:
+            d_menor[i[0]]=i[1]
+    lista = []
+
+    for i in zipped:
+        lista.append ((i[0],d_mayor[i[0]],d_menor[i[0]]))
+    lista=list(set(lista)) #Limpiando repetidos
+
+    f=itemgetter(0)
+    lista = sorted(lista,key=f)
+    return lista
 
 
 def pregunta_06():
@@ -125,10 +186,36 @@ def pregunta_06():
     ]
 
     """
-    return
+    datos6=[z.replace("\t",";") for z in datos]
+    datos6=[z.split(";") for z in datos6]
+    col6= [z[4] for z in datos6]
+    col6= [z.split(",") for z in col6]
+    mayor={}
+    menor={}
+    for palabras in col6:
+        for i in palabras:
+            if i[0:3] in mayor:
+                if mayor[i[0:3]]<int(i[4:]):
+                    mayor[i[0:3]]=int(i[4:])
+            else:
+                mayor[i[0:3]]=int(i[4:])
+        for i in palabras:
+            if i[0:3] in menor:
+                if menor[i[0:3]]>int(i[4:]):
+                    menor[i[0:3]]=int(i[4:])
+            else:
+                menor[i[0:3]]=int(i[4:])     
+    
+    lista = [(i,menor[i],mayor[i]) for i in mayor]
+
+    f=itemgetter(0)
+    lista = sorted(lista,key=f)
+
+    return lista
 
 
 def pregunta_07():
+    
     """
     Retorne una lista de tuplas que asocien las columnas 0 y 1. Cada tupla contiene un
     valor posible de la columna 2 y una lista con todas las letras asociadas (columna 1)
@@ -147,9 +234,22 @@ def pregunta_07():
         (8, ["E", "D", "E", "A", "B"]),
         (9, ["A", "B", "E", "A", "A", "C"]),
     ]
-
+    
     """
-    return
+    col1=[z[0] for z in datos] #letras col 1
+    col2=[int(z[2]) for z in datos] #numero col 2
+    zipped=list(zip(col1, col2)) #Col 1 + Col 2
+    d={}
+    for i in zipped:
+        if i[1] in d:
+            d[i[1]]+=i[0]
+            
+        else:
+            d[i[1]]=i[0]
+    lista = [(i,list(d[i])) for i in d]
+    f=itemgetter(0)
+    lista = sorted(lista,key=f)
+    return lista
 
 
 def pregunta_08():
@@ -174,7 +274,22 @@ def pregunta_08():
     ]
 
     """
-    return
+    col1=[z[0] for z in datos] #letras col 1
+    col2=[int(z[2]) for z in datos] #numero col 2
+    zipped=list(zip(col1, col2)) #Col 1 + Col 2
+    d={}
+    d1={}
+    for i in zipped:
+        if i[1] in d:
+            d[i[1]]+=i[0]       
+        else:
+            d[i[1]]=i[0]
+                
+    d = [(z, sorted(list(set(list(d[z]))))) for z in d]
+    f=itemgetter(0)
+    d = sorted(d,key=f)
+    return d
+   
 
 
 def pregunta_09():
@@ -197,8 +312,22 @@ def pregunta_09():
     }
 
     """
-    return
+    datos6=[z.replace("\t",";") for z in datos]
+    datos6=[z.split(";") for z in datos6]
+    col6= [z[4] for z in datos6]
+    col6= [z.split(",") for z in col6]
+    diccionario={}
+    for elemento in col6:
+        for i in elemento:
+            if i[0:3] in diccionario:
+                diccionario[i[0:3]]+=1
+            else:
+                diccionario[i[0:3]]=1
+    f=itemgetter(0)
+    diccionario = sorted(diccionario.items(),key=f)
+    diccionario1 = {valor: numero for valor, numero in diccionario}
 
+    return diccionario1
 
 def pregunta_10():
     """
@@ -215,11 +344,11 @@ def pregunta_10():
         ("E", 2, 3),
         ("E", 3, 3),
     ]
-
-
     """
-    return
-
+    datos6=[z.replace("\t",";") for z in datos]
+    datos6=[z.split(";") for z in datos6]
+    ejercicio=[(z[0],len(z[3].split(",")),len(z[4].split(","))) for z in datos6]
+    return ejercicio
 
 def pregunta_11():
     """
@@ -236,11 +365,25 @@ def pregunta_11():
         "f": 134,
         "g": 35,
     }
-
-
     """
-    return
-
+    datos6=[z.replace("\t",";") for z in datos]
+    datos6=[z.split(";") for z in datos6]
+    ejercicio=[(((z[1]),z[3].split(","))) for z in datos6]
+    valor=0
+    d={}
+    for tupla in ejercicio:
+        for elemento in tupla:
+            valor=int(tupla[0])
+            if elemento == tupla[1]:
+                for letra in elemento:
+                    if letra in d:
+                        d[letra]+=valor
+                    else:
+                        d[letra]=valor
+    f=itemgetter(0)
+    d = sorted(d.items(),key=f)
+    d1 = {valor: numero for valor, numero in d}
+    return d1
 
 def pregunta_12():
     """
@@ -255,6 +398,23 @@ def pregunta_12():
         'D': 136,
         'E': 324
     }
-
     """
-    return
+    datos6=[z.replace("\t",";") for z in datos]
+    datos6=[z.split(";") for z in datos6]
+    col1=[z[0] for z in datos6]
+    col5= [z[4] for z in datos6]
+    col5= [z.split(",") for z in col5]
+    zipped=list(zip(col1,col5))
+    d={}
+    for tupla in zipped:
+        d[tupla[0]]=0
+    for tupla in zipped:
+        if tupla[0] in d:
+            for valor in tupla[1]:
+                d[tupla[0]]+=int(valor[4:])
+
+    f=itemgetter(0)
+    d = sorted(d.items(),key=f)
+    d1 = {valor: numero for valor, numero in d}
+    return d1
+
